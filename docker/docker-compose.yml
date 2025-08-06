@@ -1,8 +1,8 @@
-version: '3'
+name: wvp
+
 services:
   polaris-redis:
-    image: polaris-tian-docker.pkg.coding.net/qt/polaris/polaris-redis:latest
-    restart: unless-stopped
+    image: redis:7.2
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
       interval: 15s
@@ -21,8 +21,7 @@ services:
     command: redis-server /opt/polaris/redis/redis.conf --appendonly yes
 
   polaris-mysql:
-    image: polaris-tian-docker.pkg.coding.net/qt/polaris/polaris-mysql:latest
-    restart: unless-stopped
+    image: mysql:8.0
     healthcheck:
       test: [ "CMD", "bash", "-c", "cat < /dev/null > /dev/tcp/127.0.0.1/3306" ]
       interval: 15s
@@ -34,8 +33,8 @@ services:
     environment:
       MYSQL_DATABASE: wvp
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_USER: wvp
+      MYSQL_PASSWORD: wvp
       TZ: Asia/Shanghai
     ports:
       - 3306:3306
@@ -55,7 +54,6 @@ services:
 
   polaris-media:
     image: polaris-tian-docker.pkg.coding.net/qt/polaris/polaris-media:latest
-    restart: always
     networks:
       - media-net
     ports:
@@ -68,7 +66,6 @@ services:
 
   polaris-wvp:
     image: polaris-tian-docker.pkg.coding.net/qt/polaris/polaris-wvp:latest
-    restart: always
     networks:
       - media-net
     ports:
@@ -84,7 +81,7 @@ services:
       - polaris-mysql
       - polaris-media
     volumes:
-      - ./wvp/wvp/:/opt/wvp/wvp/
+      - ./wvp/wvp/:/opt/wvp/
       - ./logs/wvp:/opt/wvp/logs/
     environment:
       TZ: "Asia/Shanghai"
@@ -115,6 +112,7 @@ services:
       WVP_HOST: polaris-wvp
       WVP_PORT: 18978
     volumes:
+      - ./nginx/dist:/opt/dist
       - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
       - ./logs/nginx:/var/log/nginx
     networks:
