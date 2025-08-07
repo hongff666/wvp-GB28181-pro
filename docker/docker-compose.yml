@@ -57,9 +57,12 @@ services:
     networks:
       - media-net
     ports:
-      - "10000:10000"
-      - "10935:10935"
-      - "5540:5540"
+      - "10000:10000/tcp"
+      - "10000:10000/udp"
+      - "10935:10935/tcp"
+      - "10935:10935/udp"
+      - "5540:5540/tcp"
+      - "5540:5540/udp"
       - "6080:6080"
     volumes:
       - ./volumes/video:/opt/media/www/record/
@@ -82,7 +85,6 @@ services:
       - ./logs/wvp:/opt/wvp/logs/
     environment:
       TZ: "Asia/Shanghai"
-      ZLM_SERCERT: su6TiedN2rVAmBbIDX0aa0QTiBJLBdcf
       NGINX_HOST: http://127.0.0.1:8080
 
   polaris-nginx:
