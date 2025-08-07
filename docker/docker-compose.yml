@@ -57,6 +57,7 @@ services:
     networks:
       - media-net
     ports:
+      - "10000:10000"
       - "10935:10935"
       - "5540:5540"
       - "6080:6080"
@@ -76,28 +77,12 @@ services:
       - polaris-redis
       - polaris-mysql
       - polaris-media
-    links:
-      - polaris-redis
-      - polaris-mysql
-      - polaris-media
     volumes:
       - ./wvp/wvp/:/opt/wvp/
       - ./logs/wvp:/opt/wvp/logs/
     environment:
       TZ: "Asia/Shanghai"
-      # 本机的IP
-      SIP_HOST: 127.0.0.1
-      STREAM_HOST: 127.0.0.1
-      ZLM_HOST: polaris-media
-      ZLM_PORT: 6080
       ZLM_SERCERT: su6TiedN2rVAmBbIDX0aa0QTiBJLBdcf
-      REDIS_HOST: polaris-redis
-      REDIS_PORT: 6379
-      DATABASE_HOST: polaris-mysql
-      DATABASE_PORT: 3306
-      DATABASE_USER: wvp
-      DATABASE_PASSWORD: wvp
-      # 前端跨域配置，nginx容器所在物理机IP
       NGINX_HOST: http://127.0.0.1:8080
 
   polaris-nginx:
